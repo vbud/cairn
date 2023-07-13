@@ -1,0 +1,32 @@
+.root {
+  padding: 1rem;
+  width: 300px;
+}
+
+.routeList {
+  margin: 1rem 0;
+}
+
+.route {
+  display: flex;
+  align-items: center;
+}
+.route:hover,
+.activeRoute {
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.routeControls {
+  display: none;
+  margin-left: auto;
+}
+.route:hover .routeControls {
+  display: flex;
+}
+
+.createRoute {
+  display: block;
+  padding: 0.5rem;
+  margin: 0 auto;
+}
