@@ -1,20 +1,22 @@
 import { LineString } from '@/store';
 import type { LineLayer } from 'react-map-gl';
 import { Layer, Source } from 'react-map-gl';
+import colors from './colors';
 
+const sourceId = 'route-path_source';
 const layer: LineLayer = {
-  id: 'routePath_layer',
-  source: 'cairn',
+  id: 'route-path_layer',
+  source: sourceId,
   type: 'line',
   paint: {
-    'line-color': 'hsl(292, 60.0%, 42.5%)',
+    'line-color': colors.plum11,
     'line-width': ['interpolate', ['exponential', 1.5], ['zoom'], 15, 2, 18, 7],
   },
 };
 
-export default function RoutePath({ geometry }: { geometry: LineString }) {
+export default function RoutePath({ geojson }: { geojson: LineString }) {
   return (
-    <Source id="routePath_source" type="geojson" data={geometry}>
+    <Source id={sourceId} type="geojson" data={geojson}>
       <Layer {...layer} />
     </Source>
   );

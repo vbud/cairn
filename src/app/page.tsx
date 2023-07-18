@@ -1,43 +1,16 @@
 'use client';
 
-import {
-  LineString,
-  LngLat,
-  LngLatList,
-  Route,
-  shallow,
-  useStore,
-} from '@/store';
+import { LngLat, LngLatList, Route, shallow, useStore } from '@/store';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import dynamic from 'next/dynamic';
-import Map, { Marker, ScaleControl } from 'react-map-gl';
+import Map, { ScaleControl } from 'react-map-gl';
+import { getPathForWaypoints } from './api';
 import colors from './colors';
 import mapStyle from './map-style.json';
 import styles from './page.module.css';
 import RoutePath from './route-path';
 import Routes from './routes';
-
-async function getPathForWaypoints(
-  routeWaypoints: LngLatList
-): Promise<LineString> {
-  if (Object.keys(routeWaypoints).length < 2)
-    return { type: 'LineString', coordinates: [] };
-
-  const routeWaypointsSerialized = routeWaypoints
-    .map((waypoint) => waypoint.join(','))
-    .join(';');
-
-  try {
-    const res = await fetch(
-      `https://api.mapbox.com/directions/v5/mapbox/walking/${routeWaypointsSerialized}?overview=full&geometries=geojson&steps=false&access_token=${process.env.NEXT_PUBLIC_MAPBOX_TOKEN}`
-    );
-    const data = await res.json();
-    return data.routes[0].geometry;
-  } catch (err) {
-    console.error(err);
-    return { type: 'LineString', coordinates: [] };
-  }
-}
+import Waypoints, { layerId as waypointsLayerId } from './waypoints';
 
 const waypointStyle = {
   cursor: 'pointer',
@@ -106,6 +79,7 @@ function App() {
   async function removeRouteWaypoint(route: Route, waypointIndex: number) {
     const newWaypoints: LngLatList = [...route.waypoints];
     newWaypoints.splice(waypointIndex, 1);
+    selectRouteWaypoint(route.id, null);
     setRouteWaypoints(route.id, newWaypoints);
     setRoutePathGeometry(route.id, await getPathForWaypoints(newWaypoints));
   }
@@ -136,7 +110,7 @@ function App() {
         onMoveEnd={({ viewState: { longitude, latitude, zoom } }) => {
           setViewState({ longitude, latitude, zoom });
         }}
-        onClick={async ({ lngLat: { lng, lat } }) => {
+        onMouseUp={async ({ lngLat: { lng, lat } }) => {
           if (activeRoute !== null) {
             // waypoints swallow clicks, so if we get here and there is a selected waypoint, unselect it
             if (activeRoute.selectedWaypointIndex !== null) {
@@ -147,18 +121,20 @@ function App() {
           }
         }}
         cursor={activeRoute === null ? 'default' : 'crosshair'}
+        interactiveLayerIds={[waypointsLayerId]}
       >
         <ScaleControl unit="imperial" />
         {activeRoute !== null && (
-          <RoutePath geometry={activeRoute.pathGeometry} />
+          <RoutePath geojson={activeRoute.pathGeojson} />
         )}
-        {activeRoute !== null &&
+        {activeRoute !== null && <Waypoints route={activeRoute} />}
+        {/* {activeRoute !== null &&
           activeRoute.waypoints.map(([lng, lat], i) => (
             <Marker
-              key={`${lng}${lat}`}
+              key={`${activeRoute.id}-${i}`}
               longitude={lng}
               latitude={lat}
-              // stop marker clicks from propagating up to the the map
+              // stop marker clicks from propagating up to the map
               onClick={(e) => {
                 selectRouteWaypoint(activeRoute.id, i);
                 e.originalEvent.stopPropagation();
@@ -172,7 +148,7 @@ function App() {
                 isSelected={activeRoute.selectedWaypointIndex === i}
               />
             </Marker>
-          ))}
+          ))} */}
       </Map>
     </main>
   );

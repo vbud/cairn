@@ -28,7 +28,7 @@ const Route = z.object({
   name: z.string(),
   waypoints: LngLatList,
   selectedWaypointIndex: z.number().nullable(),
-  pathGeometry: LineString,
+  pathGeojson: LineString,
 });
 export type Route = z.infer<typeof Route>;
 const Routes = z.record(z.string(), Route);
@@ -91,7 +91,7 @@ export const useStore = create<State & Actions>()(
               name: 'New route',
               waypoints: [],
               selectedWaypointIndex: null,
-              pathGeometry: { type: 'LineString', coordinates: [] },
+              pathGeojson: { type: 'LineString', coordinates: [] },
             };
             state.routes[newRoute.id] = newRoute;
             state.activeRouteId = newRoute.id;
@@ -132,7 +132,7 @@ export const useStore = create<State & Actions>()(
       setRoutePathGeometry: (routeId, pathGeometry) => {
         set(
           produce<State>((state) => {
-            state.routes[routeId].pathGeometry = pathGeometry;
+            state.routes[routeId].pathGeojson = pathGeometry;
           })
         );
       },
@@ -153,9 +153,14 @@ export const useStore = create<State & Actions>()(
       }),
       merge: (persistedStateUnvalidated, currentState) => {
         let persistedState: PersistedState = initialPersistedState;
-        const result = PersistedState.safeParse(persistedStateUnvalidated);
-        if (result.success) {
-          persistedState = result.data;
+
+        if (persistedStateUnvalidated !== undefined) {
+          const result = PersistedState.safeParse(persistedStateUnvalidated);
+          if (result.success) {
+            persistedState = result.data;
+          } else {
+            console.error(result.error);
+          }
         }
 
         return {
