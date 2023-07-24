@@ -5,6 +5,7 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 import dynamic from 'next/dynamic';
 import Map, { ScaleControl } from 'react-map-gl';
 import { getPathForWaypoints } from './api';
+import Footpaths from './footpaths';
 import mapStyle from './map-style.json';
 import styles from './page.module.css';
 import RoutePath from './route-path';
@@ -85,6 +86,7 @@ function App() {
         }}
         cursor={activeRoute !== null && isDragging ? 'grabbing' : 'default'}
       >
+        <Footpaths />
         <ScaleControl unit="imperial" />
         {activeRoute !== null && (
           <RoutePath geometry={activeRoute.pathGeometry} />
