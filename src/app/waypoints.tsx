@@ -55,7 +55,8 @@ export default function Waypoints({ route }: { route: Route }) {
     newWaypoints[waypointIndex] = lngLat;
     setRouteWaypoints(route.id, newWaypoints);
     selectRouteWaypoint(route.id, waypointIndex);
-    setRoutePathGeometry(route.id, await getPathForWaypoints(newWaypoints));
+    const newPath = await getPathForWaypoints(newWaypoints);
+    if (newPath !== null) setRoutePathGeometry(route.id, newPath);
   }
 
   return route.waypoints.map(([lng, lat], i) => (

@@ -38,14 +38,16 @@ function App() {
     const newWaypoints: LngLatList = [...route.waypoints, lngLat];
     setRouteWaypoints(route.id, newWaypoints);
     selectRouteWaypoint(route.id, newWaypoints.length - 1);
-    setRoutePathGeometry(route.id, await getPathForWaypoints(newWaypoints));
+    const newPath = await getPathForWaypoints(newWaypoints);
+    if (newPath !== null) setRoutePathGeometry(route.id, newPath);
   }
 
   async function removeRouteWaypoint(route: Route, waypointIndex: number) {
     const newWaypoints: LngLatList = [...route.waypoints];
     newWaypoints.splice(waypointIndex, 1);
     setRouteWaypoints(route.id, newWaypoints);
-    setRoutePathGeometry(route.id, await getPathForWaypoints(newWaypoints));
+    const newPath = await getPathForWaypoints(newWaypoints);
+    if (newPath !== null) setRoutePathGeometry(route.id, newPath);
   }
 
   return (
