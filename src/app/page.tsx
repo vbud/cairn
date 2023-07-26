@@ -53,7 +53,7 @@ function App() {
   return (
     <main
       className={styles.root}
-      onKeyUp={async (e) => {
+      onKeyUp={(e) => {
         if (
           activeRoute !== null &&
           activeRoute.selectedWaypointIndex !== null &&
@@ -61,6 +61,10 @@ function App() {
         ) {
           removeRouteWaypoint(activeRoute, activeRoute.selectedWaypointIndex);
         }
+      }}
+      tabIndex={-1}
+      ref={(el) => {
+        if (el) el.focus();
       }}
     >
       <Routes />
@@ -76,7 +80,7 @@ function App() {
         onMoveEnd={({ viewState: { longitude, latitude, zoom } }) => {
           setViewState({ longitude, latitude, zoom });
         }}
-        onClick={async ({ lngLat: { lng, lat } }) => {
+        onClick={({ lngLat: { lng, lat } }) => {
           if (activeRoute !== null) {
             // waypoints swallow clicks, so if we get here and there is a selected waypoint, unselect it
             if (activeRoute.selectedWaypointIndex !== null) {

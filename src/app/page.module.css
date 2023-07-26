@@ -2,4 +2,6 @@
   height: 100vh;
   width: 100vw;
   display: flex;
+  /* We focus the root element so we can capture keyboard events. If that approach changes in the future, the next line can be removed. */
+  outline: none;
 }
