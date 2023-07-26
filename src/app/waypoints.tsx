@@ -61,13 +61,13 @@ export default function Waypoints({ route }: { route: Route }) {
 
   return route.waypoints.map(([lng, lat], i) => (
     <Marker
-      key={`${route.id}-${i}`}
+      key={i}
       longitude={lng}
       latitude={lat}
       // stop marker clicks from propagating up to the map
       onClick={(e) => {
-        selectRouteWaypoint(route.id, i);
         e.originalEvent.stopPropagation();
+        selectRouteWaypoint(route.id, i);
       }}
       draggable
       onDragStart={() => startDraggingWaypoint()}

@@ -1,0 +1,17 @@
+.root {
+  display: inline-flex;
+  align-items: center;
+  background: none;
+  border: none;
+  border-radius: 4px;
+  font-size: 1em;
+  padding: 0.25rem;
+}
+.root:hover {
+  background: var(--hover-background);
+}
+
+.root svg {
+  width: 1em;
+  height: 1em;
+}

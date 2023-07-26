@@ -8,6 +8,7 @@ import { getPathForWaypoints } from './api';
 import Footpaths from './footpaths';
 import mapStyle from './map-style.json';
 import styles from './page.module.css';
+import RouteDetails from './route-details';
 import RoutePath from './route-path';
 import Routes from './routes';
 import Waypoints from './waypoints';
@@ -67,7 +68,7 @@ function App() {
         if (el) el.focus();
       }}
     >
-      <Routes />
+      {activeRoute === null ? <Routes /> : <RouteDetails route={activeRoute} />}
       <Map
         reuseMaps
         mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN}

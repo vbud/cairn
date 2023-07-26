@@ -1,6 +1,6 @@
 .root {
-  padding: 1rem;
   width: 300px;
+  padding: 1rem;
 }
 
 .routeList {
@@ -11,18 +11,9 @@
   display: flex;
   align-items: center;
 }
-.route:hover,
-.activeRoute {
-  cursor: pointer;
+.route:hover {
+  cursor: default;
   font-weight: bold;
-}
-
-.routeControls {
-  display: none;
-  margin-left: auto;
-}
-.route:hover .routeControls {
-  display: flex;
 }
 
 .createRoute {

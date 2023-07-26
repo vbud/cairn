@@ -1,0 +1,29 @@
+.root {
+  width: 300px;
+  padding: 1rem;
+}
+
+.routeToolbar {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.routeName {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+.nameInput {
+  width: 100%;
+  font-size: 1em;
+}
+
+.waypoint {
+  cursor: default;
+}
+.waypoint:hover,
+.selectedWaypoint {
+  font-weight: bold;
+}
