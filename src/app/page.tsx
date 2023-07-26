@@ -45,6 +45,14 @@ function App() {
 
   async function removeRouteWaypoint(route: Route, waypointIndex: number) {
     const newWaypoints: LngLatList = [...route.waypoints];
+
+    if (newWaypoints.length > 0) {
+      // Select the previous waypoint. If there is no previous waypoint, select the first waypoint.
+      selectRouteWaypoint(route.id, Math.max(waypointIndex - 1, 0));
+    } else {
+      selectRouteWaypoint(route.id, null);
+    }
+
     newWaypoints.splice(waypointIndex, 1);
     setRouteWaypoints(route.id, newWaypoints);
     const newPath = await getPathForWaypoints(newWaypoints);
