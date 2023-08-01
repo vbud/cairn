@@ -1,18 +1,56 @@
-import { Route, shallow, useStore } from '@/store';
+import { LngLatList, Route, shallow, useStore } from '@/store';
 import { ArrowLeftIcon } from '@radix-ui/react-icons';
 import classNames from 'classnames';
 import { useState } from 'react';
+import { useHotkeys } from 'react-hotkeys-hook';
+import { getPathForWaypoints } from './api';
 import IconButton from './icon-button';
 import RouteControls from './route-controls';
 import styles from './route-details.module.css';
 
 export default function RouteDetails({ route }: { route: Route }) {
-  const [selectRoute, renameRoute, selectRouteWaypoint] = useStore(
-    (s) => [s.selectRoute, s.renameRoute, s.selectRouteWaypoint],
+  const [
+    selectRoute,
+    renameRoute,
+    deleteRoute,
+    selectRouteWaypoint,
+    setRouteWaypoints,
+    setRoutePathGeometry,
+  ] = useStore(
+    (s) => [
+      s.selectRoute,
+      s.renameRoute,
+      s.deleteRoute,
+      s.selectRouteWaypoint,
+      s.setRouteWaypoints,
+      s.setRoutePathGeometry,
+    ],
     shallow
   );
 
   const [isRenaming, setIsRenaming] = useState(false);
+
+  async function removeRouteWaypoint(route: Route, waypointIndex: number) {
+    const newWaypoints: LngLatList = [...route.waypoints];
+
+    if (newWaypoints.length > 0) {
+      // Select the previous waypoint. If there is no previous waypoint, select the first waypoint.
+      selectRouteWaypoint(route.id, Math.max(waypointIndex - 1, 0));
+    } else {
+      selectRouteWaypoint(route.id, null);
+    }
+
+    newWaypoints.splice(waypointIndex, 1);
+    setRouteWaypoints(route.id, newWaypoints);
+    const newPath = await getPathForWaypoints(newWaypoints);
+    if (newPath !== null) setRoutePathGeometry(route.id, newPath);
+  }
+
+  useHotkeys('meta+backspace', () => deleteRoute(route.id));
+  useHotkeys('backspace', () => {
+    if (route.selectedWaypointIndex !== null)
+      removeRouteWaypoint(route, route.selectedWaypointIndex);
+  });
 
   return (
     <div className={styles.root}>

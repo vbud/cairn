@@ -1,6 +1,7 @@
 'use client';
 
 import { Route, shallow, useStore } from '@/store';
+import { useHotkeys } from 'react-hotkeys-hook';
 import styles from './routes.module.css';
 
 function Route({ route }: { route: Route }) {
@@ -26,6 +27,8 @@ export default function Routes() {
     (s) => [s.routes, s.createRoute, s.selectRoute],
     shallow
   );
+
+  useHotkeys('r', () => createRoute());
 
   return (
     <div className={styles.root} onClick={() => selectRoute(null)}>
