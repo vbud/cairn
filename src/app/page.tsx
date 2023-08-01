@@ -1,6 +1,6 @@
 'use client';
 
-import { LngLat, LngLatList, Route, shallow, useStore } from '@/store';
+import { LngLat, LngLatList, Route, useStore } from '@/store';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import dynamic from 'next/dynamic';
 import Map, { ScaleControl } from 'react-map-gl';
@@ -22,18 +22,15 @@ function App() {
     setRouteWaypoints,
     setRoutePathGeometry,
     selectRouteWaypoint,
-  ] = useStore(
-    (s) => [
-      s.mapViewState,
-      s.activeRouteId === null ? null : s.routes[s.activeRouteId],
-      s.isDragging,
-      s.setMapViewState,
-      s.setRouteWaypoints,
-      s.setRoutePathGeometry,
-      s.selectRouteWaypoint,
-    ],
-    shallow
-  );
+  ] = useStore((s) => [
+    s.mapViewState,
+    s.activeRouteId === null ? null : s.routes[s.activeRouteId],
+    s.isDragging,
+    s.setMapViewState,
+    s.setRouteWaypoints,
+    s.setRoutePathGeometry,
+    s.selectRouteWaypoint,
+  ]);
 
   async function addRouteWaypoint(route: Route, lngLat: LngLat) {
     const newWaypoints: LngLatList = [...route.waypoints, lngLat];

@@ -1,4 +1,4 @@
-import { LngLat, Route, shallow, useStore } from '@/store';
+import { LngLat, Route, useStore } from '@/store';
 import { Marker } from 'react-map-gl';
 import { getPathForWaypoints } from './api';
 import colors from './colors';
@@ -35,16 +35,13 @@ export default function Waypoints({ route }: { route: Route }) {
     selectRouteWaypoint,
     startDraggingWaypoint,
     stopDraggingWaypoint,
-  ] = useStore(
-    (s) => [
-      s.setRouteWaypoints,
-      s.setRoutePathGeometry,
-      s.selectRouteWaypoint,
-      s.startDraggingWaypoint,
-      s.stopDraggingWaypoint,
-    ],
-    shallow
-  );
+  ] = useStore((s) => [
+    s.setRouteWaypoints,
+    s.setRoutePathGeometry,
+    s.selectRouteWaypoint,
+    s.startDraggingWaypoint,
+    s.stopDraggingWaypoint,
+  ]);
 
   async function moveRouteWaypoint(
     route: Route,

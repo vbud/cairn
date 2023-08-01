@@ -1,8 +1,8 @@
 import { produce } from 'immer';
 import { z } from 'zod';
-import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-export { shallow } from 'zustand/shallow';
+import { shallow } from 'zustand/shallow';
+import { createWithEqualityFn } from 'zustand/traditional';
 
 const MapViewState = z.object({
   longitude: z.number(),
@@ -77,7 +77,7 @@ const initialState: State = {
   ...initialPersistedState,
 } as const;
 
-export const useStore = create<State & Actions>()(
+export const useStore = createWithEqualityFn<State & Actions>()(
   persist(
     (set) => ({
       ...initialState,
@@ -183,5 +183,6 @@ export const useStore = create<State & Actions>()(
         };
       },
     }
-  )
+  ),
+  shallow
 );

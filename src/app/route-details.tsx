@@ -1,4 +1,4 @@
-import { LngLatList, Route, shallow, useStore } from '@/store';
+import { LngLatList, Route, useStore } from '@/store';
 import { ArrowLeftIcon } from '@radix-ui/react-icons';
 import classNames from 'classnames';
 import { useState } from 'react';
@@ -16,17 +16,14 @@ export default function RouteDetails({ route }: { route: Route }) {
     selectRouteWaypoint,
     setRouteWaypoints,
     setRoutePathGeometry,
-  ] = useStore(
-    (s) => [
-      s.selectRoute,
-      s.renameRoute,
-      s.deleteRoute,
-      s.selectRouteWaypoint,
-      s.setRouteWaypoints,
-      s.setRoutePathGeometry,
-    ],
-    shallow
-  );
+  ] = useStore((s) => [
+    s.selectRoute,
+    s.renameRoute,
+    s.deleteRoute,
+    s.selectRouteWaypoint,
+    s.setRouteWaypoints,
+    s.setRoutePathGeometry,
+  ]);
 
   const [isRenaming, setIsRenaming] = useState(false);
 

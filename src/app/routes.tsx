@@ -1,12 +1,12 @@
 'use client';
 
-import { Route, shallow, useStore } from '@/store';
+import { Route, useStore } from '@/store';
 import { useHotkeys } from 'react-hotkeys-hook';
 import styles from './routes.module.css';
 
 function Route({ route }: { route: Route }) {
   const { id, name } = route;
-  const [selectRoute] = useStore((s) => [s.selectRoute], shallow);
+  const [selectRoute] = useStore((s) => [s.selectRoute]);
 
   return (
     <div
@@ -23,10 +23,11 @@ function Route({ route }: { route: Route }) {
 }
 
 export default function Routes() {
-  const [routes, createRoute, selectRoute] = useStore(
-    (s) => [s.routes, s.createRoute, s.selectRoute],
-    shallow
-  );
+  const [routes, createRoute, selectRoute] = useStore((s) => [
+    s.routes,
+    s.createRoute,
+    s.selectRoute,
+  ]);
 
   useHotkeys('r', () => createRoute());
 

@@ -1,4 +1,4 @@
-import { Route, shallow, useStore } from '@/store';
+import { Route, useStore } from '@/store';
 import { DotsHorizontalIcon } from '@radix-ui/react-icons';
 import { useRef, useState } from 'react';
 import IconButton from './icon-button';
@@ -12,7 +12,7 @@ export default function RouteControls({
   route: Route;
   triggerRename: () => void;
 }) {
-  const [deleteRoute] = useStore((s) => [s.deleteRoute], shallow);
+  const [deleteRoute] = useStore((s) => [s.deleteRoute]);
 
   const [isOpen, setIsOpen] = useState(false);
 
