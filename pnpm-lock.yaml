@@ -50,8 +50,8 @@ dependencies:
 
 devDependencies:
   '@types/node':
-    specifier: 20.4.1
-    version: 20.4.1
+    specifier: 18.17.1
+    version: 18.17.1
   '@types/react':
     specifier: 18.2.14
     version: 18.2.14
@@ -365,8 +365,8 @@ packages:
     resolution: {integrity: sha512-D0lgCq+3VWV85ey1MZVkE8ZveyuvW5VAfuahVTQRpXFQTxw03SuIf1/K4UQ87MMIXVKzpFjXFiFMZzLj2kU+iA==}
     dev: false
 
-  /@types/node@20.4.1:
-    resolution: {integrity: sha512-JIzsAvJeA/5iY6Y/OxZbv1lUcc8dNSE77lb2gnBH+/PJ3lFR1Ccvgwl5JWnHAkNHcRsT0TbpVOsiMKZ1F/yyJg==}
+  /@types/node@18.17.1:
+    resolution: {integrity: sha512-xlR1jahfizdplZYRU59JlUx9uzF1ARa8jbhM11ccpCJya8kvos5jwdm2ZAgxSCwOl0fq21svP18EVwPBXMQudw==}
     dev: true
 
   /@types/prop-types@15.7.5:
