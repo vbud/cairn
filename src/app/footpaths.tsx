@@ -22,7 +22,6 @@ export default function Footpaths() {
       type="vector"
       url={`https://api.maptiler.com/tiles/fd188460-62a3-4e7e-ae64-45bb1d68b400/tiles.json?key=${process.env.NEXT_PUBLIC_MAPTILER_TOKEN}`}
       minzoom={8}
-      maxzoom={14}
     >
       <Layer {...layer} />
     </Source>

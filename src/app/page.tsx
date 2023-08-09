@@ -11,6 +11,7 @@ import styles from './page.module.css';
 import RouteDetails from './route-details';
 import RoutePath from './route-path';
 import Routes from './routes';
+import SlopeAngle from './slope-angle';
 import Waypoints from './waypoints';
 
 function App() {
@@ -67,6 +68,7 @@ function App() {
         }}
         cursor={activeRoute !== null && isDragging ? 'grabbing' : 'default'}
       >
+        <SlopeAngle />
         <Footpaths />
         <ScaleControl unit="imperial" />
         {activeRoute !== null && (
