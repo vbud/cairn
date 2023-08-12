@@ -3,10 +3,10 @@
 import { LngLat, LngLatList, Route, useStore } from '@/store';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import dynamic from 'next/dynamic';
-import Map, { ScaleControl } from 'react-map-gl';
+import { useRef } from 'react';
+import Map, { MapRef, ScaleControl } from 'react-map-gl';
 import { getPathForWaypoints } from './api';
 import Footpaths from './footpaths';
-import mapStyle from './map-style.json';
 import styles from './page.module.css';
 import RouteDetails from './route-details';
 import RoutePath from './route-path';
@@ -20,6 +20,7 @@ function App() {
     activeRoute,
     isDragging,
     setViewState,
+    setMapIsReady,
     setRouteWaypoints,
     setRoutePathGeometry,
     selectRouteWaypoint,
@@ -28,10 +29,13 @@ function App() {
     s.activeRouteId === null ? null : s.routes[s.activeRouteId],
     s.isDragging,
     s.setMapViewState,
+    s.setMapIsReady,
     s.setRouteWaypoints,
     s.setRoutePathGeometry,
     s.selectRouteWaypoint,
   ]);
+
+  const mapRef = useRef<MapRef>(null);
 
   async function addRouteWaypoint(route: Route, lngLat: LngLat) {
     const newWaypoints: LngLatList = [...route.waypoints, lngLat];
@@ -43,13 +47,17 @@ function App() {
 
   return (
     <main className={styles.root}>
-      {activeRoute === null ? <Routes /> : <RouteDetails route={activeRoute} />}
+      {activeRoute === null ? (
+        <Routes />
+      ) : (
+        <RouteDetails route={activeRoute} mapRef={mapRef} />
+      )}
       <Map
-        reuseMaps
-        mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN}
+        ref={mapRef}
         mapLib={import('mapbox-gl')}
-        // @ts-ignore
-        mapStyle={mapStyle}
+        mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN}
+        reuseMaps
+        mapStyle="mapbox://styles/vbud/clk0647oh002j01rjc69z9o6k"
         style={{ width: '100%', height: '100%' }}
         attributionControl={false}
         initialViewState={mapViewState}
@@ -65,6 +73,18 @@ function App() {
 
             addRouteWaypoint(activeRoute, [lng, lat]);
           }
+        }}
+        onLoad={({ target: map }) => {
+          const demSource = 'mapbox-dem';
+          map.addSource(demSource, {
+            type: 'raster-dem',
+            url: 'mapbox://mapbox.mapbox-terrain-dem-v1',
+            tileSize: 512,
+            maxzoom: 14,
+          });
+          map.setTerrain({ source: demSource, exaggeration: 1 });
+          // Map is ready once the DEM source has been set as the terrain, allowing us to reliable query the terrain elevation with queryTerrainElevation.
+          map.once('idle', () => setMapIsReady());
         }}
         cursor={activeRoute !== null && isDragging ? 'grabbing' : 'default'}
       >

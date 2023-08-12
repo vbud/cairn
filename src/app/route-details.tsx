@@ -1,15 +1,24 @@
 import { LngLatList, Route, useStore } from '@/store';
 import { ArrowLeftIcon } from '@radix-ui/react-icons';
 import classNames from 'classnames';
-import { useState } from 'react';
+import { RefObject, useState } from 'react';
 import { useHotkeys } from 'react-hotkeys-hook';
+import { MapRef } from 'react-map-gl';
 import { getPathForWaypoints } from './api';
+import ElevationProfile from './elevation-profile';
 import IconButton from './icon-button';
 import RouteControls from './route-controls';
 import styles from './route-details.module.css';
 
-export default function RouteDetails({ route }: { route: Route }) {
+export default function RouteDetails({
+  route,
+  mapRef,
+}: {
+  route: Route;
+  mapRef: RefObject<MapRef>;
+}) {
   const [
+    isMapReady,
     selectRoute,
     renameRoute,
     deleteRoute,
@@ -17,6 +26,7 @@ export default function RouteDetails({ route }: { route: Route }) {
     setRouteWaypoints,
     setRoutePathGeometry,
   ] = useStore((s) => [
+    s.isMapReady,
     s.selectRoute,
     s.renameRoute,
     s.deleteRoute,
@@ -92,6 +102,14 @@ export default function RouteDetails({ route }: { route: Route }) {
           </div>
         ))}
       </div>
+
+      {/* Wait for map to be ready so that ElevationProfile can use queryTerrainElevation. */}
+      {isMapReady && mapRef.current && (
+        <ElevationProfile
+          routeCoordinates={route.pathGeometry.coordinates}
+          map={mapRef.current}
+        />
+      )}
     </div>
   );
 }

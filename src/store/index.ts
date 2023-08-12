@@ -44,11 +44,14 @@ const PersistedState = z.object({
 type PersistedState = z.infer<typeof PersistedState>;
 
 interface State extends PersistedState {
+  // non-persisted state below
+  isMapReady: boolean;
   isDragging: boolean;
 }
 
 interface Actions {
   setMapViewState: (mapViewState: MapViewState) => void;
+  setMapIsReady: () => void;
   createRoute: () => void;
   selectRoute: (routeId: ActiveRouteId) => void;
   renameRoute: (routeId: RouteId, name: Route['id']) => void;
@@ -74,6 +77,7 @@ const initialPersistedState: PersistedState = {
 } as const;
 const initialState: State = {
   isDragging: false,
+  isMapReady: false,
   ...initialPersistedState,
 } as const;
 
@@ -85,6 +89,13 @@ export const useStore = createWithEqualityFn<State & Actions>()(
         set(
           produce<State>((state) => {
             state.mapViewState = mapViewState;
+          })
+        );
+      },
+      setMapIsReady: () => {
+        set(
+          produce<State>((state) => {
+            state.isMapReady = true;
           })
         );
       },
