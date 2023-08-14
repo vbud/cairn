@@ -1,47 +1,45 @@
 import { produce } from 'immer';
-import { z } from 'zod';
 import { persist } from 'zustand/middleware';
 import { shallow } from 'zustand/shallow';
 import { createWithEqualityFn } from 'zustand/traditional';
 
-const MapViewState = z.object({
-  longitude: z.number(),
-  latitude: z.number(),
-  zoom: z.number().min(0).max(22),
-});
-type MapViewState = z.infer<typeof MapViewState>;
+type MapViewState = {
+  longitude: number;
+  latitude: number;
+  zoom: number;
+};
 
-const LngLat = z.tuple([z.number(), z.number()]);
-export type LngLat = z.infer<typeof LngLat>;
-const LngLatList = z.array(LngLat);
-export type LngLatList = z.infer<typeof LngLatList>;
-const LineString = z.object({
-  type: z.literal('LineString'),
-  coordinates: LngLatList,
-});
-export type LineString = z.infer<typeof LineString>;
+export type LngLat = [number, number];
+export type LngLatList = LngLat[];
+export type LineString = {
+  type: 'LineString';
+  coordinates: LngLatList;
+};
 
-const RouteId = z.string();
-export type RouteId = z.infer<typeof RouteId>;
-const Route = z.object({
-  id: RouteId,
-  name: z.string(),
-  waypoints: LngLatList,
-  selectedWaypointIndex: z.number().nullable(),
-  pathGeometry: LineString,
-});
-export type Route = z.infer<typeof Route>;
-const Routes = z.record(z.string(), Route);
-type Routes = z.infer<typeof Routes>;
-const ActiveRouteId = RouteId.nullable();
-type ActiveRouteId = z.infer<typeof ActiveRouteId>;
+type RouteId = string;
+export type Route = {
+  id: RouteId;
+  name: string;
+  waypoints: LngLatList;
+  selectedWaypointIndex: number | null;
+  pathGeometry: LineString;
+};
+type Routes = Record<RouteId, Route>;
+type ActiveRouteId = RouteId | null;
 
-const PersistedState = z.object({
-  mapViewState: MapViewState,
-  routes: Routes,
-  activeRouteId: ActiveRouteId,
-});
-type PersistedState = z.infer<typeof PersistedState>;
+export type OverlayId = 'slope-angle';
+type Overlay = {
+  isActive: boolean;
+  opacity: number;
+};
+type Overlays = Record<OverlayId, Overlay>;
+
+type PersistedState = {
+  mapViewState: MapViewState;
+  routes: Routes;
+  activeRouteId: ActiveRouteId;
+  overlays: Overlays;
+};
 
 interface State extends PersistedState {
   // non-persisted state below
@@ -64,6 +62,11 @@ interface Actions {
   ) => void;
   startDraggingWaypoint: () => void;
   stopDraggingWaypoint: () => void;
+  toggleOverlay: (layerId: OverlayId) => void;
+  changeOverlayOpacity: (
+    layerId: OverlayId,
+    opacity: Overlay['opacity']
+  ) => void;
 }
 
 const initialPersistedState: PersistedState = {
@@ -74,6 +77,9 @@ const initialPersistedState: PersistedState = {
   },
   routes: {},
   activeRouteId: null,
+  overlays: {
+    'slope-angle': { isActive: false, opacity: 0.5 },
+  },
 } as const;
 const initialState: State = {
   isDragging: false,
@@ -173,6 +179,21 @@ export const useStore = createWithEqualityFn<State & Actions>()(
           })
         );
       },
+      toggleOverlay: (overlayId) => {
+        set(
+          produce<State>((state) => {
+            state.overlays[overlayId].isActive =
+              !state.overlays[overlayId].isActive;
+          })
+        );
+      },
+      changeOverlayOpacity: (overlayId, opacity) => {
+        set(
+          produce<State>((state) => {
+            state.overlays[overlayId].opacity = opacity;
+          })
+        );
+      },
     }),
     {
       name: 'cairn-storage',
@@ -180,19 +201,8 @@ export const useStore = createWithEqualityFn<State & Actions>()(
         mapViewState: state.mapViewState,
         routes: state.routes,
         activeRouteId: state.activeRouteId,
+        overlays: state.overlays,
       }),
-      merge: (persistedStateUnvalidated, currentState) => {
-        let persistedState: PersistedState = initialPersistedState;
-        const result = PersistedState.safeParse(persistedStateUnvalidated);
-        if (result.success) {
-          persistedState = result.data;
-        }
-
-        return {
-          ...currentState,
-          ...persistedState,
-        };
-      },
     }
   ),
   shallow

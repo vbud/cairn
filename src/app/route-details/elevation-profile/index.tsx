@@ -1,11 +1,11 @@
 import { Route } from '@/store';
+import colors from '@/utils/colors';
 import { lineString } from '@turf/helpers';
 import length from '@turf/length';
 import { memo } from 'react';
 import { MapRef } from 'react-map-gl';
 import { Line, LineChart, ResponsiveContainer, XAxis, YAxis } from 'recharts';
-import colors from './colors';
-import styles from './elevation-profile.module.css';
+import styles from './index.module.css';
 
 type ChartData = { distance: number; elevation: number }[];
 

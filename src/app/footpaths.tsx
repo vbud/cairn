@@ -1,6 +1,6 @@
+import colors from '@/utils/colors';
 import type { LineLayer } from 'react-map-gl';
 import { Layer, Source } from 'react-map-gl';
-import colors from './colors';
 
 const sourceId = 'footpaths';
 const layer: LineLayer = {

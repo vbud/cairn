@@ -5,3 +5,11 @@
   /* We focus the root element so we can capture keyboard events. If that approach changes in the future, the next line can be removed. */
   outline: none;
 }
+
+.leftPanel {
+  padding: 1rem;
+  width: 320px;
+  display: grid;
+  grid-template-rows: 50% 50%;
+  gap: 2rem;
+}

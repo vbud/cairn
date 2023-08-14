@@ -1,9 +1,9 @@
+import IconButton from '@/components/icon-button';
 import { Route, useStore } from '@/store';
+import useInteractOutside from '@/utils/useInteractOutside';
 import { DotsHorizontalIcon } from '@radix-ui/react-icons';
 import { useRef, useState } from 'react';
-import IconButton from './icon-button';
-import styles from './route-controls.module.css';
-import useInteractOutside from './useInteractOutside';
+import styles from './index.module.css';
 
 export default function RouteControls({
   route,

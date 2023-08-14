@@ -1,0 +1,11 @@
+.slopeAngleLegend {
+  display: flex;
+  flex-wrap: wrap;
+  font-size: 0.875rem;
+}
+
+.slopeAngleLegendItem {
+  display: flex;
+  align-items: center;
+  padding: 6px;
+}

@@ -1,14 +1,14 @@
+import { getPathForWaypoints } from '@/api';
+import IconButton from '@/components/icon-button';
 import { LngLatList, Route, useStore } from '@/store';
 import { ArrowLeftIcon } from '@radix-ui/react-icons';
 import classNames from 'classnames';
 import { RefObject, useState } from 'react';
 import { useHotkeys } from 'react-hotkeys-hook';
 import { MapRef } from 'react-map-gl';
-import { getPathForWaypoints } from './api';
 import ElevationProfile from './elevation-profile';
-import IconButton from './icon-button';
+import styles from './index.module.css';
 import RouteControls from './route-controls';
-import styles from './route-details.module.css';
 
 export default function RouteDetails({
   route,
@@ -60,7 +60,7 @@ export default function RouteDetails({
   });
 
   return (
-    <div className={styles.root}>
+    <div>
       <div className={styles.routeToolbar}>
         <IconButton icon={ArrowLeftIcon} onClick={() => selectRoute(null)} />
         <RouteControls
@@ -85,7 +85,7 @@ export default function RouteDetails({
             }}
           />
         ) : (
-          route.name
+          <h2>{route.name}</h2>
         )}
       </div>
 

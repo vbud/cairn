@@ -2,7 +2,7 @@
 
 import { Route, useStore } from '@/store';
 import { useHotkeys } from 'react-hotkeys-hook';
-import styles from './routes.module.css';
+import styles from './index.module.css';
 
 function Route({ route }: { route: Route }) {
   const { id, name } = route;
@@ -32,7 +32,7 @@ export default function Routes() {
   useHotkeys('r', () => createRoute());
 
   return (
-    <div className={styles.root} onClick={() => selectRoute(null)}>
+    <div onClick={() => selectRoute(null)}>
       <h1>Routes</h1>
       <div className={styles.routeList}>
         {Object.keys(routes).length > 0

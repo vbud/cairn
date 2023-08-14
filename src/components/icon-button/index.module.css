@@ -6,6 +6,7 @@
   border-radius: 4px;
   font-size: 1em;
   padding: 0.25rem;
+  color: inherit;
 }
 .root:hover {
   background: var(--hover-background);

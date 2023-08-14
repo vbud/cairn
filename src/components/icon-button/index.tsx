@@ -1,7 +1,7 @@
 import { IconProps } from '@radix-ui/react-icons/dist/types';
 import classNames from 'classnames';
 import { MouseEventHandler } from 'react';
-import styles from './icon-button.module.css';
+import styles from './index.module.css';
 
 export default function IconButton({
   icon: Icon,

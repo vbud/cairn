@@ -1,17 +1,17 @@
 'use client';
 
+import { getPathForWaypoints } from '@/api';
 import { LngLat, LngLatList, Route, useStore } from '@/store';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import dynamic from 'next/dynamic';
 import { useRef } from 'react';
 import Map, { MapRef, ScaleControl } from 'react-map-gl';
-import { getPathForWaypoints } from './api';
 import Footpaths from './footpaths';
+import { MapOverlays, OverlayManager } from './overlays';
 import styles from './page.module.css';
 import RouteDetails from './route-details';
 import RoutePath from './route-path';
 import Routes from './routes';
-import SlopeAngle from './slope-angle';
 import Waypoints from './waypoints';
 
 function App() {
@@ -47,16 +47,18 @@ function App() {
 
   return (
     <main className={styles.root}>
-      {activeRoute === null ? (
-        <Routes />
-      ) : (
-        <RouteDetails route={activeRoute} mapRef={mapRef} />
-      )}
+      <div className={styles.leftPanel}>
+        {activeRoute === null ? (
+          <Routes />
+        ) : (
+          <RouteDetails route={activeRoute} mapRef={mapRef} />
+        )}
+        <OverlayManager />
+      </div>
       <Map
         ref={mapRef}
         mapLib={import('mapbox-gl')}
         mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN}
-        reuseMaps
         mapStyle="mapbox://styles/vbud/clk0647oh002j01rjc69z9o6k"
         style={{ width: '100%', height: '100%' }}
         attributionControl={false}
@@ -83,12 +85,12 @@ function App() {
             maxzoom: 14,
           });
           map.setTerrain({ source: demSource, exaggeration: 1 });
-          // Map is ready once the DEM source has been set as the terrain, allowing us to reliable query the terrain elevation with queryTerrainElevation.
+          // Map is ready once the DEM source has been set as the terrain, allowing us to reliably query the terrain elevation with queryTerrainElevation.
           map.once('idle', () => setMapIsReady());
         }}
         cursor={activeRoute !== null && isDragging ? 'grabbing' : 'default'}
       >
-        <SlopeAngle />
+        <MapOverlays />
         <Footpaths />
         <ScaleControl unit="imperial" />
         {activeRoute !== null && (
