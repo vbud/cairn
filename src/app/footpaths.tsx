@@ -15,7 +15,7 @@ const layer: LineLayer = {
   },
 };
 
-export default function Footpaths() {
+export function Footpaths() {
   return (
     <Source
       id={sourceId}

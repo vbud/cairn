@@ -14,7 +14,7 @@ const layer: LineLayer = {
   },
 };
 
-export default function RoutePath({ geometry }: { geometry: LineString }) {
+export function RoutePath({ geometry }: { geometry: LineString }) {
   return (
     <Source id={sourceId} type="geojson" data={geometry}>
       <Layer {...layer} />

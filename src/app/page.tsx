@@ -6,13 +6,10 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 import dynamic from 'next/dynamic';
 import { useRef } from 'react';
 import Map, { MapRef, ScaleControl } from 'react-map-gl';
-import Footpaths from './footpaths';
+import { Footpaths } from './footpaths';
 import { MapOverlays, OverlayManager } from './overlays';
 import styles from './page.module.css';
-import RouteDetails from './route-details';
-import RoutePath from './route-path';
-import Routes from './routes';
-import Waypoints from './waypoints';
+import { RouteDetails, RouteList, RoutePath, RouteWaypoints } from './routes';
 
 function App() {
   const [
@@ -49,7 +46,7 @@ function App() {
     <main className={styles.root}>
       <div className={styles.leftPanel}>
         {activeRoute === null ? (
-          <Routes />
+          <RouteList />
         ) : (
           <RouteDetails route={activeRoute} mapRef={mapRef} />
         )}
@@ -90,13 +87,13 @@ function App() {
         }}
         cursor={activeRoute !== null && isDragging ? 'grabbing' : 'default'}
       >
+        <ScaleControl unit="imperial" />
         <MapOverlays />
         <Footpaths />
-        <ScaleControl unit="imperial" />
         {activeRoute !== null && (
           <RoutePath geometry={activeRoute.pathGeometry} />
         )}
-        {activeRoute !== null && <Waypoints route={activeRoute} />}
+        {activeRoute !== null && <RouteWaypoints route={activeRoute} />}
       </Map>
     </main>
   );

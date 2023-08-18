@@ -1,10 +1,10 @@
 'use client';
 
-import { Route, useStore } from '@/store';
+import { Route as RouteListItem, useStore } from '@/store';
 import { useHotkeys } from 'react-hotkeys-hook';
 import styles from './index.module.css';
 
-function Route({ route }: { route: Route }) {
+function RouteListItem({ route }: { route: RouteListItem }) {
   const { id, name } = route;
   const [selectRoute] = useStore((s) => [s.selectRoute]);
 
@@ -22,7 +22,7 @@ function Route({ route }: { route: Route }) {
   );
 }
 
-export default function Routes() {
+export function RouteList() {
   const [routes, createRoute, selectRoute] = useStore((s) => [
     s.routes,
     s.createRoute,
@@ -37,7 +37,7 @@ export default function Routes() {
       <div className={styles.routeList}>
         {Object.keys(routes).length > 0
           ? Object.values(routes).map((route) => (
-              <Route key={route.id} route={route} />
+              <RouteListItem key={route.id} route={route} />
             ))
           : 'No routes have been created.'}
       </div>

@@ -10,7 +10,7 @@ import ElevationProfile from './elevation-profile';
 import styles from './index.module.css';
 import RouteControls from './route-controls';
 
-export default function RouteDetails({
+export function RouteDetails({
   route,
   mapRef,
 }: {

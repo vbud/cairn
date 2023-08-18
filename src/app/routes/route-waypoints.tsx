@@ -1,7 +1,7 @@
 import { LngLat, Route, useStore } from '@/store';
 import colors from '@/utils/colors';
 import { Marker } from 'react-map-gl';
-import { getPathForWaypoints } from '../api';
+import { getPathForWaypoints } from '../../api';
 
 const waypointStyle = {
   cursor: 'pointer',
@@ -28,7 +28,7 @@ function WaypointSvg({ isSelected = false }: { isSelected: boolean }) {
   );
 }
 
-export default function Waypoints({ route }: { route: Route }) {
+export function RouteWaypoints({ route }: { route: Route }) {
   const [
     setRouteWaypoints,
     setRoutePathGeometry,
