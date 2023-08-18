@@ -1,5 +1,6 @@
 import IconButton from '@/components/icon-button';
-import { Route, useStore } from '@/store';
+import { useStore } from '@/store';
+import { Route } from '@/types';
 import useInteractOutside from '@/utils/useInteractOutside';
 import { DotsHorizontalIcon } from '@radix-ui/react-icons';
 import { useRef, useState } from 'react';

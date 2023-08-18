@@ -1,4 +1,4 @@
-import { OverlayId } from '@/store';
+import { OverlayId } from '@/types';
 import { ReactNode } from 'react';
 import styles from './index.module.css';
 
@@ -16,7 +16,7 @@ const slopeAngles: {
   { start: 60, end: 90, color: [0, 0, 0] },
 ];
 
-const overlayLegends: Record<OverlayId, ReactNode> = {
+const overlayLegends = {
   'slope-angle': (
     <div className={styles.slopeAngleLegend}>
       {slopeAngles.map(({ start, end, color }) => {
@@ -42,6 +42,6 @@ const overlayLegends: Record<OverlayId, ReactNode> = {
       })}
     </div>
   ),
-};
+} satisfies Record<OverlayId, ReactNode>;
 
 export default overlayLegends;

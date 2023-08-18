@@ -1,6 +1,7 @@
 'use client';
 
-import { Route, useStore } from '@/store';
+import { useStore } from '@/store';
+import { Route } from '@/types';
 import { useHotkeys } from 'react-hotkeys-hook';
 import styles from './index.module.css';
 

@@ -1,5 +1,6 @@
 import { useStore } from '@/store';
-import overlayConfigs from '../overlay-configs';
+import { objectEntries } from '@/utils/object';
+import { overlayConfigs } from '../overlay-configs';
 import styles from './index.module.css';
 import overlayLegends from './overlay-legends';
 
@@ -13,7 +14,7 @@ export function OverlayManager() {
   return (
     <div>
       <h1 className={styles.heading}>Overlays</h1>
-      {overlayConfigs.map(({ id, name }) => {
+      {objectEntries(overlayConfigs).map(([id, { name }]) => {
         const { isActive, opacity } = overlays[id];
         const legend = overlayLegends[id];
         return (

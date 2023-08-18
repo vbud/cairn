@@ -1,4 +1,5 @@
-import { LngLat, Route, useStore } from '@/store';
+import { useStore } from '@/store';
+import { LngLat, Route } from '@/types';
 import colors from '@/utils/colors';
 import { Marker } from 'react-map-gl';
 import { getPathForWaypoints } from '../api';

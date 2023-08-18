@@ -1,38 +1,25 @@
+import {
+  addOverlayToMap,
+  changeOverlayOpacity,
+  removeOverlayFromMap,
+} from '@/app/overlays/overlay-map-methods';
+import {
+  ActiveRouteId,
+  LineString,
+  LngLatList,
+  MapViewState,
+  Overlay,
+  OverlayId,
+  Overlays,
+  Route,
+  RouteId,
+  Routes,
+} from '@/types';
 import { produce } from 'immer';
+import { Map } from 'mapbox-gl';
 import { persist } from 'zustand/middleware';
 import { shallow } from 'zustand/shallow';
 import { createWithEqualityFn } from 'zustand/traditional';
-
-type MapViewState = {
-  longitude: number;
-  latitude: number;
-  zoom: number;
-};
-
-export type LngLat = [number, number];
-export type LngLatList = LngLat[];
-export type LineString = {
-  type: 'LineString';
-  coordinates: LngLatList;
-};
-
-type RouteId = string;
-export type Route = {
-  id: RouteId;
-  name: string;
-  waypoints: LngLatList;
-  selectedWaypointIndex: number | null;
-  pathGeometry: LineString;
-};
-type Routes = Record<RouteId, Route>;
-type ActiveRouteId = RouteId | null;
-
-export type OverlayId = 'slope-angle';
-type Overlay = {
-  isActive: boolean;
-  opacity: number;
-};
-type Overlays = Record<OverlayId, Overlay>;
 
 type PersistedState = {
   mapViewState: MapViewState;
@@ -43,13 +30,13 @@ type PersistedState = {
 
 interface State extends PersistedState {
   // non-persisted state below
-  isMapReady: boolean;
+  map: Map | null;
   isDragging: boolean;
 }
 
 interface Actions {
+  setMap: (map: Map) => void;
   setMapViewState: (mapViewState: MapViewState) => void;
-  setMapIsReady: () => void;
   createRoute: () => void;
   selectRoute: (routeId: ActiveRouteId) => void;
   renameRoute: (routeId: RouteId, name: Route['id']) => void;
@@ -80,28 +67,28 @@ const initialPersistedState: PersistedState = {
   overlays: {
     'slope-angle': { isActive: false, opacity: 0.5 },
   },
-} as const;
+};
 const initialState: State = {
+  map: null,
   isDragging: false,
-  isMapReady: false,
   ...initialPersistedState,
-} as const;
+};
 
 export const useStore = createWithEqualityFn<State & Actions>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       ...initialState,
+      setMap: (map) => {
+        set(
+          produce<State>((state) => {
+            state.map = map;
+          })
+        );
+      },
       setMapViewState: (mapViewState) => {
         set(
           produce<State>((state) => {
             state.mapViewState = mapViewState;
-          })
-        );
-      },
-      setMapIsReady: () => {
-        set(
-          produce<State>((state) => {
-            state.isMapReady = true;
           })
         );
       },
@@ -180,14 +167,24 @@ export const useStore = createWithEqualityFn<State & Actions>()(
         );
       },
       toggleOverlay: (overlayId) => {
+        const { map, overlays } = get();
+        const nextIsActive = !overlays[overlayId].isActive;
+        if (nextIsActive) {
+          map && addOverlayToMap(map, overlayId, overlays[overlayId]);
+        } else {
+          map && removeOverlayFromMap(map, overlayId);
+        }
+
         set(
           produce<State>((state) => {
-            state.overlays[overlayId].isActive =
-              !state.overlays[overlayId].isActive;
+            state.overlays[overlayId].isActive = nextIsActive;
           })
         );
       },
       changeOverlayOpacity: (overlayId, opacity) => {
+        const { map } = get();
+        map && changeOverlayOpacity(map, overlayId, opacity);
+
         set(
           produce<State>((state) => {
             state.overlays[overlayId].opacity = opacity;
