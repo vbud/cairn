@@ -50,6 +50,8 @@ export function Map() {
         zoom: zoom,
       });
 
+      map.getCanvas().style.cursor = 'auto';
+
       const scale = new ScaleControl({
         maxWidth: 80,
         unit: 'imperial',
@@ -91,9 +93,6 @@ export function Map() {
           addRouteWaypoint(activeRoute, [lng, lat]);
         }
       });
-
-      // TODO: port cursor code below
-      // cursor={activeRoute !== null && isDragging ? 'grabbing' : 'default'}
     }
 
     return () => {

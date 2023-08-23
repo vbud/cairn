@@ -6,7 +6,6 @@ import { colors } from '@/utils';
 import { Map } from 'mapbox-gl';
 
 const waypointStyle = {
-  cursor: 'pointer',
   fill: colors.plum11,
 };
 const selectedWaypointStyle = {
