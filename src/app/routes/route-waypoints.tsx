@@ -1,10 +1,11 @@
-import { LngLat, Route, useStore } from '@/store';
-import colors from '@/utils/colors';
-import { Marker } from 'react-map-gl';
-import { getPathForWaypoints } from '../../api';
+import { getPathForWaypoints } from '@/api';
+import { Marker } from '@/components/map';
+import { useStore } from '@/store';
+import { LngLat, Route } from '@/types';
+import { colors } from '@/utils';
+import { Map } from 'mapbox-gl';
 
 const waypointStyle = {
-  cursor: 'pointer',
   fill: colors.plum11,
 };
 const selectedWaypointStyle = {
@@ -28,7 +29,7 @@ function WaypointSvg({ isSelected = false }: { isSelected: boolean }) {
   );
 }
 
-export function RouteWaypoints({ route }: { route: Route }) {
+export function RouteWaypoints({ map, route }: { map: Map; route: Route }) {
   const [
     setRouteWaypoints,
     setRoutePathGeometry,
@@ -59,6 +60,7 @@ export function RouteWaypoints({ route }: { route: Route }) {
   return route.waypoints.map(([lng, lat], i) => (
     <Marker
       key={i}
+      map={map}
       longitude={lng}
       latitude={lat}
       // stop marker clicks from propagating up to the map

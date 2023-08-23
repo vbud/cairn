@@ -1,38 +1,20 @@
 import { produce } from 'immer';
+import { Map } from 'mapbox-gl';
 import { persist } from 'zustand/middleware';
 import { shallow } from 'zustand/shallow';
 import { createWithEqualityFn } from 'zustand/traditional';
-
-type MapViewState = {
-  longitude: number;
-  latitude: number;
-  zoom: number;
-};
-
-export type LngLat = [number, number];
-export type LngLatList = LngLat[];
-export type LineString = {
-  type: 'LineString';
-  coordinates: LngLatList;
-};
-
-type RouteId = string;
-export type Route = {
-  id: RouteId;
-  name: string;
-  waypoints: LngLatList;
-  selectedWaypointIndex: number | null;
-  pathGeometry: LineString;
-};
-type Routes = Record<RouteId, Route>;
-type ActiveRouteId = RouteId | null;
-
-export type OverlayId = 'slope-angle';
-type Overlay = {
-  isActive: boolean;
-  opacity: number;
-};
-type Overlays = Record<OverlayId, Overlay>;
+import {
+  ActiveRouteId,
+  LineString,
+  LngLatList,
+  MapViewState,
+  Overlay,
+  OverlayId,
+  Overlays,
+  Route,
+  RouteId,
+  Routes,
+} from '../types';
 
 type PersistedState = {
   mapViewState: MapViewState;
@@ -43,13 +25,13 @@ type PersistedState = {
 
 interface State extends PersistedState {
   // non-persisted state below
-  isMapReady: boolean;
+  map: Map | null;
   isDragging: boolean;
 }
 
 interface Actions {
   setMapViewState: (mapViewState: MapViewState) => void;
-  setMapIsReady: () => void;
+  setMap: (map: Map | null) => void;
   createRoute: () => void;
   selectRoute: (routeId: ActiveRouteId) => void;
   renameRoute: (routeId: RouteId, name: Route['id']) => void;
@@ -82,8 +64,8 @@ const initialPersistedState: PersistedState = {
   },
 } as const;
 const initialState: State = {
+  map: null,
   isDragging: false,
-  isMapReady: false,
   ...initialPersistedState,
 } as const;
 
@@ -98,10 +80,10 @@ export const useStore = createWithEqualityFn<State & Actions>()(
           })
         );
       },
-      setMapIsReady: () => {
+      setMap: (map) => {
         set(
           produce<State>((state) => {
-            state.isMapReady = true;
+            state.map = map;
           })
         );
       },
@@ -207,3 +189,5 @@ export const useStore = createWithEqualityFn<State & Actions>()(
   ),
   shallow
 );
+
+export const useMap = () => useStore((state) => state.map);

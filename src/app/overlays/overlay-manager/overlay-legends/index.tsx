@@ -1,4 +1,4 @@
-import { OverlayId } from '@/store';
+import { OverlayId } from '@/types';
 import { ReactNode } from 'react';
 import styles from './index.module.css';
 

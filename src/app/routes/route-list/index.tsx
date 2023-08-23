@@ -1,6 +1,7 @@
 'use client';
 
-import { Route as RouteListItem, useStore } from '@/store';
+import { useStore } from '@/store';
+import { Route as RouteListItem } from '@/types';
 import { useHotkeys } from 'react-hotkeys-hook';
 import styles from './index.module.css';
 
