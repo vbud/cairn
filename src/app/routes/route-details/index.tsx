@@ -1,6 +1,7 @@
 import { getPathForWaypoints } from '@/api';
 import IconButton from '@/components/icon-button';
-import { LngLatList, Route, useStore } from '@/store';
+import { useStore } from '@/store';
+import { LngLatList, Route } from '@/types';
 import { ArrowLeftIcon } from '@radix-ui/react-icons';
 import classNames from 'classnames';
 import { useState } from 'react';

@@ -1,29 +1,26 @@
 import { getPathForWaypoints } from '@/api';
 import { MapOverlays } from '@/app/overlays';
 import { RoutePath, RouteWaypoints } from '@/app/routes';
-import { LngLat, LngLatList, Route, useStore } from '@/store';
+import { useStore } from '@/store';
+import { LngLat, LngLatList, Route } from '@/types';
 import { Map as MapboxMap, ScaleControl } from 'mapbox-gl';
-import { createContext, useCallback } from 'react';
+import { useCallback } from 'react';
 import { Footpaths } from './footpaths';
 import styles from './index.module.css';
 
-export const MapContext = createContext<MapboxMap | null>(null);
-
 export function Map() {
   const [
-    mapViewState,
-    setMapViewState,
     map,
     setMap,
+    setMapViewState,
     setRouteWaypoints,
     setRoutePathGeometry,
     selectRouteWaypoint,
     activeRoute,
   ] = useStore((s) => [
-    s.mapViewState,
-    s.setMapViewState,
     s.map,
     s.setMap,
+    s.setMapViewState,
     s.setRouteWaypoints,
     s.setRoutePathGeometry,
     s.selectRouteWaypoint,
@@ -41,6 +38,8 @@ export function Map() {
 
   const mountMap = useCallback((node: HTMLDivElement) => {
     if (node) {
+      // We only need the mapViewState when the map loads, so only select it once here, rather than with the rest of the selectors, to avoid unnecessary re-renders.
+      const { mapViewState } = useStore.getState();
       const { longitude, latitude, zoom } = mapViewState;
 
       const map = new MapboxMap({
@@ -76,11 +75,10 @@ export function Map() {
         setMapViewState({ longitude, latitude, zoom });
       });
 
-      map.on('click', () => {
-        const { lng, lat } = map.getCenter();
-
+      map.on('click', (e) => {
         // We are outside of react in this callback, so we need to get the latest state
         const s = useStore.getState();
+        // TODO: share
         const activeRoute =
           s.activeRouteId === null ? null : s.routes[s.activeRouteId];
         if (activeRoute !== null) {
@@ -89,6 +87,7 @@ export function Map() {
             selectRouteWaypoint(activeRoute.id, null);
           }
 
+          const { lng, lat } = e.lngLat;
           addRouteWaypoint(activeRoute, [lng, lat]);
         }
       });
@@ -106,12 +105,18 @@ export function Map() {
 
   return (
     <div className={styles.map} ref={mountMap}>
-      <MapOverlays />
-      <Footpaths />
-      {activeRoute !== null && (
-        <RoutePath geometry={activeRoute.pathGeometry} />
+      {map && (
+        <>
+          <MapOverlays map={map} />
+          <Footpaths map={map} />
+          {activeRoute !== null && (
+            <RoutePath map={map} geometry={activeRoute.pathGeometry} />
+          )}
+          {activeRoute !== null && (
+            <RouteWaypoints map={map} route={activeRoute} />
+          )}
+        </>
       )}
-      {activeRoute !== null && <RouteWaypoints route={activeRoute} />}
     </div>
   );
 }

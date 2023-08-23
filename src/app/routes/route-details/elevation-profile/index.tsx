@@ -1,5 +1,5 @@
-import { Route } from '@/store';
-import colors from '@/utils/colors';
+import { Route } from '@/types';
+import { colors } from '@/utils';
 import { lineString } from '@turf/helpers';
 import length from '@turf/length';
 import { Map } from 'mapbox-gl';

@@ -1,6 +1,6 @@
 'use client';
 
-import { Map } from '@/map';
+import { Map } from '@/app/map';
 import { useStore } from '@/store';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import dynamic from 'next/dynamic';

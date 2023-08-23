@@ -1,4 +1,4 @@
-import { LineString, LngLatList } from '@/store';
+import { LineString, LngLatList } from '@/types';
 
 type AbortableFetch = { abort: () => void; ready: ReturnType<typeof fetch> };
 function abortableFetch(

@@ -1,4 +1,4 @@
-const colors = {
+export const colors = {
   plum1: 'hsl(292, 90.0%, 99.4%)',
   plum2: 'hsl(300, 100%, 98.6%)',
   plum3: 'hsl(299, 71.2%, 96.4%)',
@@ -24,5 +24,3 @@ const colors = {
   brown11: 'hsl(25, 30.0%, 41.0%)',
   brown12: 'hsl(20, 30.0%, 19.0%)',
 } as const;
-
-export default colors;

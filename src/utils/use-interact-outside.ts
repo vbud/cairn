@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 
-export default function useInteractOutside(
+export function useInteractOutside(
   ref: React.RefObject<HTMLElement>,
   handler:
     | (() => void)

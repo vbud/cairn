@@ -1,23 +1,35 @@
-import { LineString } from '@/store';
-import colors from '@/utils/colors';
-import type { LineLayer } from 'react-map-gl';
-import { Layer, Source } from 'react-map-gl';
+import { Source } from '@/components/map/source';
+import { LineString } from '@/types';
+import { colors } from '@/utils';
+import { Map } from 'mapbox-gl';
 
-const sourceId = 'routePath';
-const layer: LineLayer = {
-  id: sourceId,
-  source: sourceId,
-  type: 'line',
-  paint: {
-    'line-color': colors.plum11,
-    'line-width': ['interpolate', ['exponential', 1.5], ['zoom'], 15, 2, 18, 7],
-  },
-};
-
-export function RoutePath({ geometry }: { geometry: LineString }) {
+export function RoutePath({
+  map,
+  geometry,
+}: {
+  map: Map;
+  geometry: LineString;
+}) {
   return (
-    <Source id={sourceId} type="geojson" data={geometry}>
-      <Layer {...layer} />
-    </Source>
+    <Source
+      map={map}
+      id="routePath"
+      options={{ type: 'geojson', data: geometry }}
+      layer={{
+        type: 'line',
+        paint: {
+          'line-color': colors.plum11,
+          'line-width': [
+            'interpolate',
+            ['exponential', 1.5],
+            ['zoom'],
+            15,
+            2,
+            18,
+            7,
+          ],
+        },
+      }}
+    />
   );
 }
