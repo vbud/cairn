@@ -1,4 +1,5 @@
 import { produce } from 'immer';
+import { Map } from 'mapbox-gl';
 import { persist } from 'zustand/middleware';
 import { shallow } from 'zustand/shallow';
 import { createWithEqualityFn } from 'zustand/traditional';
@@ -43,13 +44,13 @@ type PersistedState = {
 
 interface State extends PersistedState {
   // non-persisted state below
-  isMapReady: boolean;
+  map: Map | null;
   isDragging: boolean;
 }
 
 interface Actions {
   setMapViewState: (mapViewState: MapViewState) => void;
-  setMapIsReady: () => void;
+  setMap: (map: Map | null) => void;
   createRoute: () => void;
   selectRoute: (routeId: ActiveRouteId) => void;
   renameRoute: (routeId: RouteId, name: Route['id']) => void;
@@ -82,8 +83,8 @@ const initialPersistedState: PersistedState = {
   },
 } as const;
 const initialState: State = {
+  map: null,
   isDragging: false,
-  isMapReady: false,
   ...initialPersistedState,
 } as const;
 
@@ -98,10 +99,10 @@ export const useStore = createWithEqualityFn<State & Actions>()(
           })
         );
       },
-      setMapIsReady: () => {
+      setMap: (map) => {
         set(
           produce<State>((state) => {
-            state.isMapReady = true;
+            state.map = map;
           })
         );
       },

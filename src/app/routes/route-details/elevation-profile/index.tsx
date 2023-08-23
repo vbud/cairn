@@ -2,8 +2,8 @@ import { Route } from '@/store';
 import colors from '@/utils/colors';
 import { lineString } from '@turf/helpers';
 import length from '@turf/length';
+import { Map } from 'mapbox-gl';
 import { memo } from 'react';
-import { MapRef } from 'react-map-gl';
 import { Line, LineChart, ResponsiveContainer, XAxis, YAxis } from 'recharts';
 import styles from './index.module.css';
 
@@ -11,11 +11,10 @@ type ChartData = { distance: number; elevation: number }[];
 
 function generateChartData(
   routeCoordinates: Route['pathGeometry']['coordinates'],
-  map: MapRef
+  map: Map
 ) {
   const chartData: ChartData = [];
   routeCoordinates.forEach((lngLat, i) => {
-    // Use queryTerrainElevation on the map ref, not on the mapbox map instance. See https://github.com/visgl/react-map-gl/blob/ec63f691ec5a83bd652b64bb51aa02bcdc0703a8/src/mapbox/create-ref.ts#L65. It looks like react-map-gl messes with the map instance, so the ref's version of this function has to work around that.
     const elevation = (map.queryTerrainElevation(lngLat) || 0) * 3.28084;
 
     if (i === 0) {
@@ -43,7 +42,7 @@ const ElevationProfile = memo(
     map,
   }: {
     routeCoordinates: Route['pathGeometry']['coordinates'];
-    map: MapRef;
+    map: Map;
   }) => {
     const chartData = generateChartData(routeCoordinates, map);
 

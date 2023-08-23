@@ -1,7 +1,7 @@
+import { getPathForWaypoints } from '@/api';
 import { LngLat, Route, useStore } from '@/store';
 import colors from '@/utils/colors';
 import { Marker } from 'react-map-gl';
-import { getPathForWaypoints } from '../../api';
 
 const waypointStyle = {
   cursor: 'pointer',

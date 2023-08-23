@@ -3,22 +3,15 @@ import IconButton from '@/components/icon-button';
 import { LngLatList, Route, useStore } from '@/store';
 import { ArrowLeftIcon } from '@radix-ui/react-icons';
 import classNames from 'classnames';
-import { RefObject, useState } from 'react';
+import { useState } from 'react';
 import { useHotkeys } from 'react-hotkeys-hook';
-import { MapRef } from 'react-map-gl';
 import ElevationProfile from './elevation-profile';
 import styles from './index.module.css';
 import RouteControls from './route-controls';
 
-export function RouteDetails({
-  route,
-  mapRef,
-}: {
-  route: Route;
-  mapRef: RefObject<MapRef>;
-}) {
+export function RouteDetails({ route }: { route: Route }) {
   const [
-    isMapReady,
+    map,
     selectRoute,
     renameRoute,
     deleteRoute,
@@ -26,7 +19,7 @@ export function RouteDetails({
     setRouteWaypoints,
     setRoutePathGeometry,
   ] = useStore((s) => [
-    s.isMapReady,
+    s.map,
     s.selectRoute,
     s.renameRoute,
     s.deleteRoute,
@@ -104,10 +97,10 @@ export function RouteDetails({
       </div>
 
       {/* Wait for map to be ready so that ElevationProfile can use queryTerrainElevation. */}
-      {isMapReady && mapRef.current && (
+      {map && (
         <ElevationProfile
           routeCoordinates={route.pathGeometry.coordinates}
-          map={mapRef.current}
+          map={map}
         />
       )}
     </div>
