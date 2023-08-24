@@ -78,7 +78,7 @@ function updateSource(
     }
   }
 
-  if (!changedKeyCount) {
+  if (changedKeyCount === 0) {
     return;
   }
 
