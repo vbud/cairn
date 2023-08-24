@@ -1,13 +1,15 @@
 import { OverlayId } from '@/types';
 
-const overlayConfigs: {
+type OverlayConfig = {
   id: OverlayId;
   name: string;
   type: 'raster';
   url: string;
   minzoom: number;
   maxzoom: number;
-}[] = [
+};
+
+const overlayConfigs: OverlayConfig[] = [
   {
     id: 'slope-angle',
     name: 'Slope angle',

@@ -5,7 +5,7 @@ import {
   Marker as MapboxMarker,
   PointLike,
 } from 'mapbox-gl';
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import { createPortal } from 'react-dom';
 
 function arePointsEqual(a?: PointLike, b?: PointLike): boolean {
@@ -59,6 +59,10 @@ export function Marker({
   onDrag,
   onDragEnd,
 }: MarkerProps) {
+  const callbackProps = { onClick, onDragStart, onDrag, onDragEnd };
+  const callbackPropsRef = useRef(callbackProps);
+  callbackPropsRef.current = callbackProps;
+
   const marker: MapboxMarker = useMemo(() => {
     let hasChildren = false;
     React.Children.forEach(children, (el) => {
@@ -81,7 +85,7 @@ export function Marker({
     m.setLngLat([longitude, latitude]);
 
     m.getElement().addEventListener('click', (e) => {
-      onClick?.({
+      callbackPropsRef.current.onClick?.({
         type: 'click',
         target: m,
         originalEvent: e,
@@ -93,21 +97,21 @@ export function Marker({
         ...(e as MapboxMarkerDragEvent),
         lngLat: marker.getLngLat(),
       };
-      onDragStart?.(evt);
+      callbackPropsRef.current.onDragStart?.(evt);
     });
     m.on('drag', (e) => {
       const evt = {
         ...(e as MapboxMarkerDragEvent),
         lngLat: marker.getLngLat(),
       };
-      onDrag?.(evt);
+      callbackPropsRef.current.onDrag?.(evt);
     });
     m.on('dragend', (e) => {
       const evt = {
         ...(e as MapboxMarkerDragEvent),
         lngLat: marker.getLngLat(),
       };
-      onDragEnd?.(evt);
+      callbackPropsRef.current.onDragEnd?.(evt);
     });
 
     return m;

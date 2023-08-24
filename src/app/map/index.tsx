@@ -108,12 +108,10 @@ export function Map() {
         <>
           <MapOverlays map={map} />
           <Footpaths map={map} />
-          {activeRoute !== null && (
+          {activeRoute && (
             <RoutePath map={map} geometry={activeRoute.pathGeometry} />
           )}
-          {activeRoute !== null && (
-            <RouteWaypoints map={map} route={activeRoute} />
-          )}
+          {activeRoute && <RouteWaypoints map={map} route={activeRoute} />}
         </>
       )}
     </div>
